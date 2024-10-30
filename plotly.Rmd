@@ -6,5 +6,47 @@ output:
     toc_float: true
 ---
 
-## Problem 2 -- Plotly
+## Most Commonly Ordered Instacart Products 
+
+```{r message=FALSE, echo=FALSE}
+library(tidyverse)
+library("p8105.datasets")
+library(plotly)
+```
+
+```{r echo=FALSE, message=FALSE}
+data(instacart)
+
+#Setting up data to make bar graph showing the top 10 most ordered products 
+top_products = 
+  instacart |> 
+  count(product_name, sort = TRUE) |>
+  top_n(10) |>
+  filter(!is.na(product_name)) |>
+  select(product_name,n)
+```
+
+```{r echo=FALSE}
+top_products =
+  top_products |>
+  plot_ly(
+    x = ~reorder(product_name, n),
+    y = ~n,
+    type = "bar",
+    marker = list(
+      color = ~n,
+      colorscale = "Blues",
+      reversescale = TRUE,         
+      colorbar = list(title = "Order Count")
+    )
+  ) |>
+  layout(
+    title = "Top 10 Most Ordered Products",
+    xaxis = list(title = "Product Name"),
+    yaxis = list(title = "Number of Orders")
+  )
+
+top_products
+```
+
 
