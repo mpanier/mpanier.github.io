@@ -1,0 +1,25 @@
+---
+title: "Megan A. Panier"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+## Welcome to my Personal Site 
+
+![](images/staining.jpeg)
+
+## Links to Additional Information
+
+* [GitHub](https://github.com/mpanier)
+
+* [Linkedin](https://www.linkedin.com/in/megan-panier-5bbbb5201/)
+
+* [2024 Society for Neuroscience Presentation](https://meganpanier.com/PosterDetail.html)
+
+
+
+
+
+
