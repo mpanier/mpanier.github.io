@@ -6,7 +6,7 @@ output:
     toc_float: true
 ---
 
-## Most Commonly Ordered Instacart Products 
+## Problem 2: flexdashboard using instacart data 
 
 ```{r message=FALSE, echo=FALSE}
 library(tidyverse)
@@ -24,6 +24,27 @@ top_products =
   top_n(10) |>
   filter(!is.na(product_name)) |>
   select(product_name,n)
+
+# Preparing data to make a scatter plot 
+days_reorder_data <- instacart |>
+  filter(!is.na(days_since_prior_order), !is.na(reordered)) |>
+  select(days_since_prior_order, reordered) |>
+  sample_n(6000) |>
+  mutate(
+    reorder_status = factor(reordered, levels = c(0, 1), labels = c("New", "Reorder"))
+  )
+
+#Preparing to make a plot showing average orders per user by day of the week 
+order_day = instacart |>
+  group_by(order_dow) |>
+  summarize(avg_orders = mean(order_number, na.rm = TRUE)) |>
+  filter(!is.na(order_dow)) |>
+  mutate(
+    day_of_week = factor(order_dow, 
+                         levels = 0:6, 
+                         labels = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
+  )
+
 ```
 
 ```{r echo=FALSE}
@@ -48,5 +69,48 @@ top_products =
 
 top_products
 ```
+
+
+```{r echo=FALSE}
+order_day <- order_day |>
+  plot_ly(
+    x = ~day_of_week,
+    y = ~avg_orders,
+    type = "scatter",
+    mode = "lines+markers",
+    marker = list(size = 8),
+    line = list(width = 2)
+  ) |>
+  layout(
+    title = "Average Orders per User by Day of the Week",
+    xaxis = list(title = "Day of the Week"),
+    yaxis = list(title = "Average Order Number")
+  )
+
+order_day
+
+
+```
+```{r echo=FALSE}
+
+days_reorder_data = days_reorder_data |>
+  plot_ly(
+    x = ~days_since_prior_order,
+    y = ~jitter(as.numeric(reorder_status), factor = 0.2),  
+    type = "scatter",
+    mode = "markers",
+    marker = list(size = 5, opacity = 0.6, color = 'teal')
+  ) |>
+  layout(
+    title = "Days Since Prior Order vs Reorder Status",
+    xaxis = list(title = "Days Since Prior Order"),
+    yaxis = list(title = "Order Type", tickvals = c(1, 2), ticktext = c("New", "Reorder"))
+  )
+
+days_reorder_data
+
+
+```
+
 
 
