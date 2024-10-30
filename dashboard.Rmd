@@ -1,0 +1,122 @@
+---
+title: "Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    source: embed
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(p8105.datasets)
+library(plotly)
+
+# Load Instacart dataset
+data(instacart)
+
+# Setting up data for bar graph showing the top 10 most ordered products
+top_products <- 
+  instacart |> 
+  count(product_name, sort = TRUE) |>
+  top_n(10) |>
+  filter(!is.na(product_name)) |>
+  select(product_name, n)
+
+# Preparing data for a scatter plot of days since prior order vs reorder status
+days_reorder_data <- instacart |>
+  filter(!is.na(days_since_prior_order), !is.na(reordered)) |>
+  select(days_since_prior_order, reordered) |>
+  sample_n(6000) |>
+  mutate(
+    reorder_status = factor(reordered, levels = c(0, 1), labels = c("New", "Reorder"))
+  )
+
+# Preparing data for a plot showing average orders per user by day of the week
+order_day <- instacart |>
+  group_by(order_dow) |>
+  summarize(avg_orders = mean(order_number, na.rm = TRUE)) |>
+  filter(!is.na(order_dow)) |>
+  mutate(
+    day_of_week = factor(order_dow, 
+                         levels = 0:6, 
+                         labels = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
+  )
+```
+
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+top_products =
+  top_products |>
+  plot_ly(
+    x = ~reorder(product_name, n),
+    y = ~n,
+    type = "bar",
+    marker = list(
+      color = ~n,
+      colorscale = "Blues",
+      reversescale = TRUE,         
+      colorbar = list(title = "Order Count")
+    )
+  ) |>
+  layout(
+    title = "Top 10 Most Ordered Products",
+    xaxis = list(title = "Product Name"),
+    yaxis = list(title = "Number of Orders")
+  )
+
+top_products
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+order_day <- order_day |>
+  plot_ly(
+    x = ~day_of_week,
+    y = ~avg_orders,
+    type = "scatter",
+    mode = "lines+markers",
+    marker = list(size = 8),
+    line = list(width = 2)
+  ) |>
+  layout(
+    title = "Average Orders per User by Day of the Week",
+    xaxis = list(title = "Day of the Week"),
+    yaxis = list(title = "Average Order Number")
+  )
+
+order_day
+```
+
+### Chart C
+
+```{r}
+days_reorder_data = days_reorder_data |>
+  plot_ly(
+    x = ~days_since_prior_order,
+    y = ~jitter(as.numeric(reorder_status), factor = 0.2),  
+    type = "scatter",
+    mode = "markers",
+    marker = list(size = 5, opacity = 0.6, color = 'teal')
+  ) |>
+  layout(
+    title = "Days Since Prior Order vs Reorder Status",
+    xaxis = list(title = "Days Since Prior Order"),
+    yaxis = list(title = "Order Type", tickvals = c(1, 2), ticktext = c("New", "Reorder"))
+  )
+
+days_reorder_data
+
+```
+
