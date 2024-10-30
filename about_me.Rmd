@@ -6,7 +6,7 @@ output:
     toc_float: true
 ---
 
-## General Interests
+## General
 
 My name is Megan Panier, and I am currently pursuing an MPH in Epidemiology at Columbia University, with a specialization in Data Science. As a Visiting Graduate Student at the Broad Institute of MIT and Harvard, I am engaged in research on sleep, proteomics, and dementia within the Center for Genomic Medicine. With a background in Biology and a research focus on neurodegenerative diseases, including Alzheimer's, my work has explored the impact of γ-secretase modulators and BDNF on amyloid-β pathologies. Driven by my passion for translational neuroscience, aging, and neurodegeneration, I aim to contribute to this field through innovative, multidisciplinary research and plan to complete an advanced degree in Neuroscience by 2029.
 
