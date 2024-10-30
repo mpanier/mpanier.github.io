@@ -6,7 +6,7 @@ output:
     toc_float: true
 ---
 
-## Welcome to my Personal Site 
+## Advancing Insights in Translational Neuroscience & Public Health 
 
 ![](images/staining.jpeg)
 
